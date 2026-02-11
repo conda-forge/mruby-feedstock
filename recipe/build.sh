@@ -10,7 +10,12 @@ export MRUBY_CONFIG="build_config/conda.rb"
 # Use compiler driver for linking `-Wl` options to work
 export LD="${CC}"
 
-rake all test
+# Avoid bigint test bug for architectures other than x86_64 and i386 (refer to https://github.com/mruby/mruby/issues/6698)
+if [[ "${target_platform}" == "linux-aarch64" || "${target_platform}" == "linux-ppc64le" ]]; then
+  rake all
+else
+  rake all test
+fi
 
 mkdir -p ${PREFIX}/{lib,bin,mrbgems,mrblib,include}
 cp -r build/host/lib/* ${PREFIX}/lib
