@@ -1,5 +1,5 @@
 context:
-  version: "3.4.0"
+  version: "4.0.0"
 
 package:
   name: mruby
@@ -7,10 +7,10 @@ package:
 
 source:
   url: https://github.com/mruby/mruby/archive/refs/tags/${{ version }}.tar.gz
-  sha256: 183711c7a26d932b5342e64860d16953f1cc6518d07b2c30a02937fb362563f8
+  sha256: e2ea271dbed14e9f2b33df773ae447b747dbc242ce2675022c0a57efea85a7b4
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
@@ -29,8 +29,8 @@ requirements:
 
 tests:
   - script:
-    - mruby -v
-    - mruby -h
+      - mruby -v
+      - mruby -h
 
 about:
   homepage: https://mruby.org
