@@ -1,5 +1,8 @@
 @echo on
 
+set "MRUBY_ROOT=%SRC_DIR%"
+if errorlevel 1 exit 1
+
 @REM Create conda.rb from default and switch to full-core
 copy /Y build_config\default.rb build_config\conda.rb
 if errorlevel 1 exit 1
@@ -9,7 +12,7 @@ sed -i "s|conf.gembox 'default'|conf.gembox 'full-core'|" build_config\conda.rb
 if errorlevel 1 exit 1
 
 @REM Export MRUBY_CONFIG for the build
-set "MRUBY_CONFIG=%CD%\build_config\conda.rb"
+set "MRUBY_CONFIG=build_config\conda.rb"
 if errorlevel 1 exit 1
 
 @REM Run build and tests (use ruby -S rake to ensure using the Ruby in PATH)
