@@ -9,11 +9,13 @@ sed -i "s|conf.gembox 'default'|conf.gembox 'full-core'|" build_config\conda.rb
 if errorlevel 1 exit 1
 
 @REM Export MRUBY_CONFIG for the build
-set "MRUBY_CONFIG=build_config\conda.rb"
+set "MRUBY_CONFIG=%CD%\build_config\conda.rb"
 if errorlevel 1 exit 1
 
 @REM Run build and tests (use ruby -S rake to ensure using the Ruby in PATH)
-ruby -S rake all test
+ruby -S rake
+if errorlevel 1 exit 1
+ruby -S rake test
 if errorlevel 1 exit 1
 
 if not exist "%LIBRARY_PREFIX%\lib" mkdir "%LIBRARY_PREFIX%\lib"
