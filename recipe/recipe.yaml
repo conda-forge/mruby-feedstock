@@ -1,5 +1,5 @@
 context:
-  version: "3.4.0"
+  version: "4.0.0"
 
 package:
   name: mruby
@@ -7,10 +7,12 @@ package:
 
 source:
   url: https://github.com/mruby/mruby/archive/refs/tags/${{ version }}.tar.gz
-  sha256: 183711c7a26d932b5342e64860d16953f1cc6518d07b2c30a02937fb362563f8
+  sha256: e2ea271dbed14e9f2b33df773ae447b747dbc242ce2675022c0a57efea85a7b4
+  patches:
+    - 0001-fix-mruby-config-windows-task.patch
 
 build:
-  number: 2
+  number: 0
 
 requirements:
   build:
@@ -29,8 +31,16 @@ requirements:
 
 tests:
   - script:
-    - mruby -v
-    - mruby -h
+      - if: unix
+        then: |
+          mruby -v
+          mruby -h
+      - if: win
+        then: |
+          mruby -v
+          if %ERRORLEVEL% neq 0 exit /b 1
+          mruby -h
+          if %ERRORLEVEL% neq 0 exit /b 1
 
 about:
   homepage: https://mruby.org
