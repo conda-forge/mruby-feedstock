@@ -29,8 +29,16 @@ requirements:
 
 tests:
   - script:
-      - mruby -v
-      - mruby -h
+      - if: unix
+        then: |
+          mruby -v
+          mruby -h
+      - if: win
+        then: |
+          mruby -v
+          if %ERRORLEVEL% neq 0 exit /b 1
+          mruby -h
+          if %ERRORLEVEL% neq 0 exit /b 1
 
 about:
   homepage: https://mruby.org
