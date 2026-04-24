@@ -9,7 +9,7 @@ source:
   url: https://github.com/mruby/mruby/archive/refs/tags/${{ version }}.tar.gz
   sha256: e2ea271dbed14e9f2b33df773ae447b747dbc242ce2675022c0a57efea85a7b4
   patches:
-    - 0001-fix-presym-skip-missing-task.patch
+    - 0001-fix-mruby-config-windows-task.patch
 
 build:
   number: 0
