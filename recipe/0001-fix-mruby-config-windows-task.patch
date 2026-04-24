@@ -1,15 +1,46 @@
 diff --git a/mrbgems/mruby-bin-config/mrbgem.rake b/mrbgems/mruby-bin-config/mrbgem.rake
-index 4ab90203f..2f22ecbef 100644
+index 4ab90203f..5d4b0458c 100644
 --- a/mrbgems/mruby-bin-config/mrbgem.rake
 +++ b/mrbgems/mruby-bin-config/mrbgem.rake
-@@ -21,7 +21,9 @@ MRuby::Gem::Specification.new('mruby-bin-config') do |spec|
+@@ -21,14 +21,14 @@ MRuby::Gem::Specification.new('mruby-bin-config') do |spec|
    end
  
    mruby_config = name + suffix
 -  mruby_config_path = "#{mruby_config_dir}/#{mruby_config}"
-+  mruby_config_path = ENV['OS'] == 'Windows_NT' ?
-+    build.exefile("#{build.build_dir}/bin/#{name}") :
-+    "#{mruby_config_dir}/#{mruby_config}"
++  mruby_config_path = build.exefile("#{mruby_config_dir}/#{name}")
    make_cfg = "#{build.build_dir}/#{build.libdir_name}/libmruby.flags.mak"
    tmplt_path = "#{__dir__}/#{mruby_config}"
  
+   if iscross
+     build.products << mruby_config_path
+   else
+-    build.bins << mruby_config
++    build.bins << name
+   end
+ 
+   directory mruby_config_dir
+diff --git a/tasks/presym.rake b/tasks/presym.rake
+index 7a9262fad..e634264de 100644
+--- a/tasks/presym.rake
++++ b/tasks/presym.rake
+@@ -2,7 +2,8 @@ all_prerequisites = ->(task_name, prereqs) do
+   Rake::Task[task_name].prerequisites.each do |prereq_name|
+     next if prereqs[prereq_name]
+     prereqs[prereq_name] = true
+-    all_prerequisites.(Rake::Task[prereq_name].name, prereqs)
++    task = Rake.application.lookup(prereq_name)
++    all_prerequisites.(task.name, prereqs) if task
+   end
+ end
+ 
+@@ -65,7 +66,9 @@ MRuby.each_target do |build|
+     next unless File.extname(prereq) == build.exts.object
+     next unless prereq.start_with?(build_dir)
+     next if mrbc_build_dir && prereq.start_with?(mrbc_build_dir)
+-    file prereq => presym_proxy
++    t = Rake.application.lookup(prereq) ||
++        Rake.application.enhance_with_matching_rule(prereq)
++    t.enhance([presym_proxy.name]) if t
+   end
+ 
+   task gensym: presym.list_path
