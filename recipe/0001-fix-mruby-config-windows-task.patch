@@ -1,0 +1,15 @@
+diff --git a/mrbgems/mruby-bin-config/mrbgem.rake b/mrbgems/mruby-bin-config/mrbgem.rake
+index 4ab90203f..2f22ecbef 100644
+--- a/mrbgems/mruby-bin-config/mrbgem.rake
++++ b/mrbgems/mruby-bin-config/mrbgem.rake
+@@ -21,7 +21,9 @@ MRuby::Gem::Specification.new('mruby-bin-config') do |spec|
+   end
+ 
+   mruby_config = name + suffix
+-  mruby_config_path = "#{mruby_config_dir}/#{mruby_config}"
++  mruby_config_path = ENV['OS'] == 'Windows_NT' ?
++    build.exefile("#{build.build_dir}/bin/#{name}") :
++    "#{mruby_config_dir}/#{mruby_config}"
+   make_cfg = "#{build.build_dir}/#{build.libdir_name}/libmruby.flags.mak"
+   tmplt_path = "#{__dir__}/#{mruby_config}"
+ 
