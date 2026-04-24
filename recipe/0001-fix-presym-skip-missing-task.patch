@@ -1,5 +1,5 @@
 diff --git a/tasks/presym.rake b/tasks/presym.rake
-index 7a9262fad..6b9b661c7 100644
+index 7a9262fad..ed0fea62a 100644
 --- a/tasks/presym.rake
 +++ b/tasks/presym.rake
 @@ -2,7 +2,8 @@ all_prerequisites = ->(task_name, prereqs) do
@@ -12,3 +12,14 @@ index 7a9262fad..6b9b661c7 100644
    end
  end
  
+@@ -65,7 +66,9 @@ MRuby.each_target do |build|
+     next unless File.extname(prereq) == build.exts.object
+     next unless prereq.start_with?(build_dir)
+     next if mrbc_build_dir && prereq.start_with?(mrbc_build_dir)
+-    file prereq => presym_proxy
++    if Rake.application.lookup(prereq)
++      Rake::Task[prereq].enhance([presym_proxy])
++    end
+   end
+ 
+   task gensym: presym.list_path
