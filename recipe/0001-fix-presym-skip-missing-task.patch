@@ -1,0 +1,14 @@
+diff --git a/tasks/presym.rake b/tasks/presym.rake
+index 7a9262fad..6b9b661c7 100644
+--- a/tasks/presym.rake
++++ b/tasks/presym.rake
+@@ -2,7 +2,8 @@ all_prerequisites = ->(task_name, prereqs) do
+   Rake::Task[task_name].prerequisites.each do |prereq_name|
+     next if prereqs[prereq_name]
+     prereqs[prereq_name] = true
+-    all_prerequisites.(Rake::Task[prereq_name].name, prereqs)
++    task = Rake.application.lookup(prereq_name)
++    all_prerequisites.(task.name, prereqs) if task
+   end
+ end
+ 
